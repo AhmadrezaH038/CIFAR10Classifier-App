@@ -1,2 +1,3 @@
 # CIFAR10Classifier-App
-a model designed for CIFAR10 dataset
+
+A CNN-based model for classifying images in the CIFAR-10 dataset, deployed as a web app.
