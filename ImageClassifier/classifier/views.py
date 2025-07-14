@@ -9,4 +9,4 @@ def run_classifier(request):
     result = None
     if request.method == "POST" and request.FILES.get('image'):
         result = classify_image(request.user, request.FILES['image'])
-    return render(request, '', {"result": result})
+    return render(request, 'classifier.html', {"result": result})
