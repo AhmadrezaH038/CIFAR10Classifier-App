@@ -19,6 +19,18 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Authentication (signup / login / logout)
+    path('auth/', include('authentication.urls')),
+
+    # Classifier pages
+    path('classify/', include('classifier.urls')),
+
+    # API
+    path('api/', include('api.urls')),
+    
+    # Frontend “home”
     path('', include('frontend.urls', namespace='frontend')),
 ]
+
 
