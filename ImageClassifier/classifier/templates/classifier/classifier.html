@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>CIFAR 10 image classifier</h2>
+
+<form method="post" enctype="multipart/form-data" action="{% url 'classifier:classify' %}">
+    {% csrf_token %}
+    <div class='mb-3'>
+        <label for='image' class='form-label'>Upload Image</label>
+        <input type='file' class='form-control' id='image' name='image' required>
+    </div>
+    <button type='submit' class='btn btn-primary'>Classify</button>
+</form>
+
+{% if result %}
+    <hr>
+    <h4>Results</h4>
+    <p><strong>Model used:</strong> {{ result.model }}</p>
+    <p><strong>Prediction:</strong> {{ result.label }}</p>
+    <p><strong>Confidence:</strong> {{ result.confidence|floatformat:2 }}</p>
+    {% if result.warning %}
+      <div class="alert alert-warning">
+        Confidence below 60%. Take this with caution!
+      </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
+
