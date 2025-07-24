@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [
-    path('', views.home_view, name='home')
-]
+app_name = 'frontend'
 
+urlpatterns = [
+    path('', views.classifier_page, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard')
+]

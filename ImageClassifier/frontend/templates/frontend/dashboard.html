@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Your Recent Classifications</h2>
+  {% if actions %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Model</th>
+          <th>Label</th>
+          <th>Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in actions %}
+          <tr>
+            <td>{{ a.timestamp }}</td>
+            <td>{{ a.model_name }}</td>
+            <td>{{ a.predicted_label }}</td>
+            <td>{{ a.confidence|floatformat:2 }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>You have no past classifications yet. Go try the <a href="{% url 'frontend:classifier' %}">classifier</a>!</p>
+  {% endif %}
+{% endblock %}
