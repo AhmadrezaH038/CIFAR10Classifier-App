@@ -6,11 +6,12 @@ import torchvision.models as models
 from django.conf import settings
 from .threshold import *
 from .models import RecentAction
+from .resnet50 import ResNet50
 
 
 class SimpleNeuralNetwork(nn.Module):
     def __init__(self):
-        super(SimpleNeuralNetwork).__init__()
+        super(SimpleNeuralNetwork, self).__init__()
         self.stack = nn.Sequential(
             # Convolutional Neural Network
             nn.Conv2d(3, 6, 5),
@@ -21,6 +22,7 @@ class SimpleNeuralNetwork(nn.Module):
             nn.MaxPool2d(2, 2),
 
             nn.Flatten(),
+
 
             nn.Linear(16 * 5 * 5, 120),
             nn.ReLU(),
@@ -40,15 +42,18 @@ class ModelManager:
         # simple cnn
         self.device = torch.device('cpu')
         self.simple = SimpleNeuralNetwork().to(self.device)
-        simple_path = os.path.join() #TODO: directory of .pth file
+        simple_path = os.path.join('SimpleNetParameters.pth') #TODO: directory of .pth file
         self.simple.load_state_dict(torch.load(simple_path, weights_only=True))
         self.simple.eval()
 
-        # # ResNet NN
-        # self.resnet = models.resnet18(num_classes=10).to(self.device)
-        # resnet_path = os.path.join(settings.BASE_DIR, 'ResNetparameters.pth') #TODO: directory of .pth file
-        # # self.resnet.load_state_dict(torch.load(resnet_path, map_location=self.device))
-        # self.resnet.eval()
+        # ResNet NN
+        self.resnet = ResNet50(num_classes=10).to(self.device)
+        state_dict = torch.load("resnet50.pth", map_location=self.device, weights_only=True)
+        state_dict.pop("fc.weight", None)
+        state_dict.pop("fc.bias", None)
+        self.resnet.load_state_dict(state_dict, strict=False)  # strict=False ignores mismatches
+        self.resnet.eval()
+    
 
         self.transform = tfs.Compose([
             tfs.ToTensor(),
@@ -67,19 +72,21 @@ class ModelManager:
             out1 = torch.softmax(self.simple(x), dim=1)
             conf1, pred1 = out1.max(1)
 
-            # out2 = torch.softmax(self.resnet(x), dim=1)
-            # conf2, pred2 = out2.max(1)
+            out2 = torch.softmax(self.resnet(x), dim=1)
+            conf2, pred2 = out2.max(1)
         
         name, idx, conf = select_model([
             ("SimpleCNN", pred1.item(), conf1.item()),
-            # ("ResNet",   pred2.item(), conf2.item()),
+            ("ResNet",   pred2.item(), conf2.item()),
         ])
 
         label = self.labels[idx]
         warning = (conf < 0.60)
         return name, label, conf, warning
     
+
 _manager =  ModelManager()
+
 
 def classify_image(user, image_file):
 

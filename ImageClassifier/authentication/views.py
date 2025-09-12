@@ -22,7 +22,7 @@ def Login(request):
     return render(request, 'authentication/login.html', {'form': form})
 
 
-def user_logout(request):
+def Logout(request):
     logout(request)
     messages.info(request, "You've been logged out.")
     return redirect("frontend:home")
