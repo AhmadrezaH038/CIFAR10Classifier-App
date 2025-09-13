@@ -3,7 +3,7 @@
 
 <h2>CIFAR 10 image classifier</h2>
 
-<form method="post" enctype="multipart/form-data" action="{% url 'classifier:classify' %}">
+<form method="post" enctype="multipart/form-data" action="{% url 'classify' %}">
     {% csrf_token %}
     <div class='mb-3'>
         <label for='image' class='form-label'>Upload Image</label>

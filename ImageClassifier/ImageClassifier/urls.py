@@ -24,7 +24,7 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
 
     # Classifier pages
-    path('classify/', include('classifier.urls')),
+    path('', include('classifier.urls')),
 
     # API
     path('api/', include('api.urls')),
