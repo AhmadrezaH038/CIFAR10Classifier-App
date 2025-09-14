@@ -56,6 +56,7 @@ class ModelManager:
     
 
         self.transform = tfs.Compose([
+            tfs.Resize((32, 32)),
             tfs.ToTensor(),
             tfs.Normalize((0.4914, 0.4822, 0.4465),
                         (0.247, 0.2435, 0.2616)),
